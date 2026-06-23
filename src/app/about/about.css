@@ -1,0 +1,53 @@
+.page-header {
+  background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+  padding: 6rem 0;
+  text-align: center;
+}
+.opacity-90 { opacity: 0.9; }
+.text-primary { color: var(--primary-blue); }
+.text-white { color: var(--white); }
+
+.about-image {
+  width: 100%;
+  height: 400px;
+  background-color: var(--light-blue);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-md);
+}
+.water-animation {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 50%;
+  background: var(--accent-blue);
+  opacity: 0.6;
+  border-radius: 40%;
+  animation: wave-anim 4s infinite linear;
+}
+
+.mv-card {
+  background: var(--white);
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.mv-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-5px);
+}
+
+@keyframes wave-anim {
+  0% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-25%) translateY(10px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .about-grid, .mv-grid {
+    grid-template-columns: 1fr;
+  }
+}

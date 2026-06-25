@@ -1,92 +1,243 @@
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import { Phone, Mail, MapPin, MessageCircle, Minus, Plus, ArrowRight, CheckCircle2 } from 'lucide-react';
 import './contact.css';
 
-export const metadata = {
-  title: 'Contact Us | Amirita Water Plant',
-};
+/* TODO: Replace with your real WhatsApp number */
+const WHATSAPP_URL = 'https://wa.me/919876543210?text=Hi%2C%20I%27d%20like%20to%20place%20a%20water%20order';
+
+/* TODO: Replace with real contact info */
+const CONTACT_INFO = [
+  { icon: Phone,  label: 'Phone',   value: '+91 98765 43210',          href: 'tel:+919876543210' },
+  { icon: Mail,   label: 'Email',   value: 'order@amiritawater.com',   href: 'mailto:order@amiritawater.com' },
+  { icon: MapPin, label: 'Address', value: '123 Water Plant Road, Pure City', href: null },
+];
+
+const INIT = { name: '', phone: '', quantity: 2, deliveryDate: '' };
 
 export default function Contact() {
+  const [form,         setForm]         = useState(INIT);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess,    setIsSuccess]    = useState(false);
+
+  const update = (field, val) => setForm((p) => ({ ...p, [field]: val }));
+
+  const handleChange = (e) => update(e.target.name, e.target.value);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    /* Simulate network request */
+    await new Promise((r) => setTimeout(r, 1400));
+    setIsSubmitting(false);
+    setIsSuccess(true);
+  };
+
+  const reset = () => {
+    setForm(INIT);
+    setIsSuccess(false);
+  };
+
   return (
     <div className="contact-page">
-      <header className="page-header">
+      {/* Page banner */}
+      <header className="page-banner contact-page__banner" aria-labelledby="contact-heading">
         <div className="container">
-          <h1 className="h1 text-white">Contact Us</h1>
-          <p className="p text-white opacity-90">We are always here to help you stay hydrated.</p>
+          <p className="badge contact__eyebrow">Place an Order</p>
+          <h1 className="h1 contact__hero-title" id="contact-heading">
+            Fresh Water, <span className="gradient-text">Your Doorstep.</span>
+          </h1>
+          <p className="lead contact__hero-sub">
+            Order in seconds — no apps, no hassle. Just fill out the form or
+            chat with us directly on WhatsApp.
+          </p>
         </div>
       </header>
 
-      <section className="section bg-light">
-        <div className="container grid grid-cols-2 gap-8 contact-grid">
-          
-          <div className="contact-info-section">
-            <h2 className="h2 mb-6 text-primary">Get in Touch</h2>
-            <div className="info-item">
-              <MapPin className="info-icon" size={24} />
-              <div>
-                <h4 className="font-bold">Address</h4>
-                <p className="p">123 Water Plant Road, Pure City, ST 12345</p>
-              </div>
+      {/* Main two-col layout */}
+      <section className="section" aria-label="Order form and contact information">
+        <div className="container contact__inner">
+
+          {/* ── LEFT: Contact info ───────────────── */}
+          <aside className="contact__info-panel glass-card" aria-label="Contact information">
+            <h2 className="h3 contact__info-title">Contact Information</h2>
+            <p className="body contact__info-sub">
+              Prefer to call, email, or visit us? Here&apos;s how to reach our team.
+            </p>
+
+            <ul className="contact__info-list">
+              {CONTACT_INFO.map(({ icon: Icon, label, value, href }) => (
+                <li key={label} className="contact__info-item">
+                  <div className="icon-circle contact__info-icon">
+                    <Icon size={20} aria-hidden="true" />
+                  </div>
+                  <div>
+                    <div className="caption contact__info-label">{label}</div>
+                    {href ? (
+                      <a href={href} className="contact__info-value">{value}</a>
+                    ) : (
+                      <span className="contact__info-value">{value}</span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="contact__wa-block">
+              <p className="caption contact__wa-caption">
+                Fastest way to order — just message us:
+              </p>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-whatsapp contact__wa-btn"
+                id="contact-whatsapp-btn"
+              >
+                <MessageCircle size={18} aria-hidden="true" />
+                Open WhatsApp Chat
+              </a>
             </div>
-            <div className="info-item">
-              <Phone className="info-icon" size={24} />
-              <div>
-                <h4 className="font-bold">Phone / WhatsApp</h4>
-                <p className="p">+1 234 567 890</p>
+          </aside>
+
+          {/* ── RIGHT: Order form ────────────────── */}
+          <div className="contact__form-panel glass-card" role="main">
+            {!isSuccess ? (
+              <>
+                <div className="contact__form-header">
+                  <h2 className="h3 contact__form-title">Quick Order Form</h2>
+                  <p className="body contact__form-sub">
+                    Fill in your details and we&apos;ll confirm your delivery within minutes.
+                  </p>
+                </div>
+
+                <form
+                  className="contact__form"
+                  onSubmit={handleSubmit}
+                  noValidate
+                  aria-label="Water delivery order form"
+                >
+                  {/* Name */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="name">Full Name *</label>
+                    <input
+                      id="name"
+                      type="text"
+                      name="name"
+                      className="form-input"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="e.g. Mohamed Faseed"
+                      required
+                      autoComplete="name"
+                    />
+                  </div>
+
+                  {/* Phone */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="phone">Mobile Number *</label>
+                    <input
+                      id="phone"
+                      type="tel"
+                      name="phone"
+                      className="form-input"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder="+91 99999 99999"
+                      required
+                      autoComplete="tel"
+                    />
+                  </div>
+
+                  {/* Quantity */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="quantity">Number of 20L Cans</label>
+                    <div className="qty-control" id="quantity" role="group" aria-label="Quantity selector">
+                      <button
+                        type="button"
+                        className="qty-btn"
+                        onClick={() => update('quantity', Math.max(1, form.quantity - 1))}
+                        aria-label="Decrease quantity"
+                        id="qty-decrease"
+                      >
+                        <Minus size={16} />
+                      </button>
+                      <span className="qty-value" aria-live="polite" aria-atomic="true">
+                        {form.quantity}
+                      </span>
+                      <button
+                        type="button"
+                        className="qty-btn"
+                        onClick={() => update('quantity', form.quantity + 1)}
+                        aria-label="Increase quantity"
+                        id="qty-increase"
+                      >
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Date */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="deliveryDate">Preferred Delivery Date *</label>
+                    <input
+                      id="deliveryDate"
+                      type="date"
+                      name="deliveryDate"
+                      className="form-input"
+                      value={form.deliveryDate}
+                      onChange={handleChange}
+                      required
+                      min={new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    className="btn btn-primary contact__submit"
+                    disabled={isSubmitting}
+                    id="contact-submit-btn"
+                  >
+                    {isSubmitting ? (
+                      <span className="spinner" role="status" aria-label="Processing order" />
+                    ) : (
+                      <>
+                        Place Order <ArrowRight size={18} aria-hidden="true" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              </>
+            ) : (
+              /* Success state */
+              <div className="contact__success" role="status" aria-live="polite">
+                <div className="contact__success-icon">
+                  <CheckCircle2 size={40} aria-hidden="true" />
+                </div>
+                <h2 className="h3 contact__success-title">Order Confirmed!</h2>
+                <p className="body contact__success-msg">
+                  Thank you, <strong>{form.name}</strong>. We&apos;ll deliver your water on{' '}
+                  <strong>
+                    {new Date(form.deliveryDate).toLocaleDateString('en-IN', {
+                      day: 'numeric', month: 'long', year: 'numeric',
+                    })}
+                  </strong>{' '}
+                  and will call you at <strong>{form.phone}</strong> to confirm.
+                </p>
+                <button
+                  className="btn btn-outline"
+                  onClick={reset}
+                  id="contact-order-again-btn"
+                >
+                  Place Another Order
+                </button>
               </div>
-            </div>
-            <div className="info-item">
-              <Mail className="info-icon" size={24} />
-              <div>
-                <h4 className="font-bold">Email</h4>
-                <p className="p">contact@amirita.com</p>
-              </div>
-            </div>
-            <div className="info-item">
-              <Clock className="info-icon" size={24} />
-              <div>
-                <h4 className="font-bold">Working Hours</h4>
-                <p className="p">Mon - Sat: 8:00 AM - 8:00 PM</p>
-              </div>
-            </div>
+            )}
           </div>
 
-          <div className="contact-form-section">
-            <form className="contact-form">
-              <h3 className="h3 mb-4">Send us a Message</h3>
-              <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input type="text" id="name" placeholder="Your Name" required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" placeholder="Your Email" required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="phone">Phone Number</label>
-                <input type="tel" id="phone" placeholder="Your Phone Number" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="message">Message / Order Details</label>
-                <textarea id="message" rows="5" placeholder="How can we help you?" required></textarea>
-              </div>
-              <button type="submit" className="btn btn-primary w-full">Send Message</button>
-            </form>
-          </div>
-          
         </div>
-      </section>
-
-      <section className="map-section">
-        <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100000!2d-73.98!3d40.75!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzAwLjAiTiA3M8KwNTgnNDguMCJX!5e0!3m2!1sen!2sus!4v1600000000000!5m2!1sen!2sus" 
-          width="100%" 
-          height="450" 
-          style={{ border: 0 }} 
-          allowFullScreen="" 
-          loading="lazy" 
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Google Maps Location"
-        ></iframe>
       </section>
     </div>
   );

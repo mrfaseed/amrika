@@ -1,97 +1,171 @@
 import Link from 'next/link';
-import { Droplets, ShieldCheck, Truck, Users, Star, ArrowRight, Shield } from 'lucide-react';
+import Image from 'next/image';
+import { Flame, ShieldCheck, Truck, CheckCircle2, MessageCircle } from 'lucide-react';
+import TrustSection from '@/components/TrustSection';
 import './Home.css';
+
+/* TODO: Replace with your real WhatsApp number */
+const WHATSAPP_URL =
+  'https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20start%20my%20water%20delivery';
+
+const HOW_STEPS = [
+  {
+    num: '1',
+    title: 'Message us on WhatsApp',
+    desc: 'Send "Hi" or your requirement directly to our verified business number.',
+  },
+  {
+    num: '2',
+    title: 'Confirm your order',
+    desc: 'Share your location. We accept UPI, Cash on Delivery, or monthly subscriptions.',
+  },
+  {
+    num: '3',
+    title: 'Receive your water',
+    desc: 'Our friendly delivery executive drops off sanitized 20L cans at your door.',
+  },
+];
 
 export default function Home() {
   return (
     <>
-      <section className="hero">
-        <div className="container hero-container">
-          <div className="hero-content">
-            <div className="badge mb-6">
-              <Droplets size={14} className="text-blue" />
-              <span>Premium Water Delivery</span>
+      {/* ── HERO ─────────────────────────────────── */}
+      <section className="hero" aria-labelledby="hero-heading">
+        {/* ambient blobs */}
+        <div className="hero__blob hero__blob--1" aria-hidden="true" />
+        <div className="hero__blob hero__blob--2" aria-hidden="true" />
+
+        <div className="container hero__inner">
+          {/* Left content */}
+          <div className="hero__content">
+            <div className="badge hero__badge">
+              <Flame size={14} aria-hidden="true" />
+              Premium 20L Water Delivery
             </div>
-            <h1 className="h1 mb-4 hero-title">
-              Pure Water,<br />
-              <span className="text-gradient">Elevated Life.</span>
+
+            <h1 className="h1 hero__title" id="hero-heading">
+              Drinking Water<br />
+              Delivered to <span className="gradient-text">You.</span>
             </h1>
-            <p className="p-large mb-8 hero-subtitle">
-              Experience the highest standard of hydration. We deliver state-of-the-art RO Purified and UV Treated drinking water directly to your home and office.
+
+            <p className="lead hero__sub">
+              Experience the highest standard of hydration. Pure RO + UV
+              treated water delivered same-day to your doorstep.
             </p>
-            <div className="hero-actions flex gap-4 mb-10">
-              <Link href="/contact" className="btn btn-primary btn-lg">
-                Order Now <ArrowRight size={18} />
-              </Link>
+
+            <div className="hero__actions">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary btn-lg"
+                id="hero-order-btn"
+              >
+                <MessageCircle size={18} aria-hidden="true" />
+                Order via WhatsApp
+              </a>
               <Link href="/products" className="btn btn-outline btn-lg">
-                View Products
+                View Products &amp; Pricing
               </Link>
             </div>
-            
-            <div className="hero-features flex gap-6">
-              <div className="feature-item flex items-center gap-2">
-                <ShieldCheck size={18} className="text-blue" />
-                <div className="feature-text">
-                  <strong>100% Pure</strong>
-                  <span>Lab Tested</span>
-                </div>
-              </div>
-              <div className="feature-item flex items-center gap-2">
-                <Shield size={18} className="text-blue" />
-                <div className="feature-text">
-                  <strong>RO + UV</strong>
-                  <span>Purification</span>
-                </div>
-              </div>
-              <div className="feature-item flex items-center gap-2">
-                <Truck size={18} className="text-blue" />
-                <div className="feature-text">
-                  <strong>Fast Delivery</strong>
-                  <span>At Your Doorstep</span>
-                </div>
-              </div>
-              <div className="feature-item flex items-center gap-2">
-                <Users size={18} className="text-blue" />
-                <div className="feature-text">
-                  <strong>10,000+</strong>
-                  <span>Happy Families</span>
-                </div>
-              </div>
+
+            {/* Trust chips */}
+            <div className="hero__chips">
+              <span className="hero__chip">
+                <ShieldCheck size={14} aria-hidden="true" />
+                FSSAI Certified
+              </span>
+              <span className="hero__chip">
+                <Truck size={14} aria-hidden="true" />
+                Same-Day Delivery
+              </span>
+              <span className="hero__chip">
+                <CheckCircle2 size={14} aria-hidden="true" />
+                4.9 ★ Rating
+              </span>
             </div>
           </div>
-          
-          <div className="hero-visual">
-            <div className="visual-image-wrapper">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/dark_hero.png" alt="Amirita Premium Water" className="hero-img" />
+
+          {/* Right visual */}
+          <div className="hero__visual" aria-hidden="true">
+            <div className="hero__img-wrap">
+              <Image
+                src="/images/water_delivery_hero.png"
+                alt="Amirita 20L purified water can ready for delivery"
+                width={520}
+                height={580}
+                priority
+                className="hero__img animate-float"
+                style={{ objectFit: 'contain' }}
+              />
             </div>
           </div>
         </div>
+      </section>
 
-        <div className="container">
-          <div className="hero-stats-panel grid grid-cols-4 gap-4 text-center">
-            <div className="stat-item flex flex-col items-center">
-              <Star size={24} className="text-blue mb-2" />
-              <h3 className="h3">20+</h3>
-              <p className="text-sm text-secondary">Years of Trust</p>
+      {/* ── TRUST SECTION ────────────────────────── */}
+      <TrustSection />
+
+      {/* ── HOW IT WORKS ─────────────────────────── */}
+      <section className="hiw section bg-panel" aria-labelledby="hiw-heading">
+        <div className="container hiw__inner">
+
+          {/* Image side */}
+          <div className="hiw__visual">
+            <div className="hiw__img-wrap">
+              <Image
+                src="/images/water_truck_delivery.png"
+                alt="Amirita water delivery truck en route to customers"
+                width={640}
+                height={440}
+                className="hiw__img"
+                style={{ objectFit: 'cover' }}
+              />
             </div>
-            <div className="stat-item flex flex-col items-center">
-              <Users size={24} className="text-blue mb-2" />
-              <h3 className="h3">5000+</h3>
-              <p className="text-sm text-secondary">Happy Customers</p>
-            </div>
-            <div className="stat-item flex flex-col items-center">
-              <Droplets size={24} className="text-blue mb-2" />
-              <h3 className="h3">100%</h3>
-              <p className="text-sm text-secondary">Purity Guaranteed</p>
-            </div>
-            <div className="stat-item flex flex-col items-center">
-              <div className="headphones-icon mb-2 text-blue">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+
+            {/* Floating badge */}
+            <div className="glass-card-sm hiw__badge">
+              <div className="hiw__badge-icon">
+                <CheckCircle2 size={22} aria-hidden="true" />
               </div>
-              <h3 className="h3">24/7</h3>
-              <p className="text-sm text-secondary">Support</p>
+              <div>
+                <div className="hiw__badge-title">Fast &amp; Reliable</div>
+                <div className="hiw__badge-sub">Track your delivery instantly</div>
+              </div>
             </div>
+          </div>
+
+          {/* Content side */}
+          <div className="hiw__content">
+            <h2 className="h2 hiw__heading" id="hiw-heading">
+              Hydration, just a text away.
+            </h2>
+            <p className="lead hiw__sub">
+              No complicated apps, no long forms. Just WhatsApp us and
+              we&apos;ll handle the rest — from order to doorstep.
+            </p>
+
+            <ol className="hiw__steps">
+              {HOW_STEPS.map(({ num, title, desc }) => (
+                <li key={num} className="hiw__step">
+                  <div className="hiw__step-num" aria-hidden="true">{num}</div>
+                  <div>
+                    <h4 className="hiw__step-title">{title}</h4>
+                    <p className="body hiw__step-desc">{desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary btn-lg"
+              id="hiw-order-btn"
+            >
+              Start Delivery Today
+            </a>
           </div>
         </div>
       </section>

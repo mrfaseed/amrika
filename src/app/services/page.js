@@ -1,52 +1,143 @@
 import Link from 'next/link';
-import { Home, Building2, CalendarDays, Truck } from 'lucide-react';
+import { Home, Building2, CalendarDays, Truck, CheckCircle2, ArrowRight } from 'lucide-react';
 import './services.css';
 
 export const metadata = {
-  title: 'Services | Amirita Water Plant',
+  title: 'Services',
+  description:
+    'Amirita Water Plant offers residential delivery, corporate water supply, event water supply, and bulk tanker services.',
 };
+
+const SERVICES = [
+  {
+    id: 'residential',
+    icon: Home,
+    accent: '#3B82F6',
+    title: 'Residential Delivery',
+    desc: 'Never run out of clean water. We deliver 20L cans directly to your doorstep on your schedule — daily, weekly, or on-demand.',
+    features: [
+      'Same-day delivery available',
+      'Monthly subscription plans',
+      'Dispenser rental available',
+      'SMS/WhatsApp reminders',
+    ],
+    cta: 'Schedule Delivery',
+  },
+  {
+    id: 'corporate',
+    icon: Building2,
+    accent: '#06B6D4',
+    title: 'Corporate Supply',
+    desc: 'Keep your team hydrated and productive. We supply offices, co-working spaces, and factories with reliable bulk water.',
+    features: [
+      'Custom delivery schedule',
+      'Dispenser installation & service',
+      'Dedicated account manager',
+      'Monthly invoicing available',
+    ],
+    cta: 'Get Corporate Quote',
+  },
+  {
+    id: 'events',
+    icon: CalendarDays,
+    accent: '#8B5CF6',
+    title: 'Event Water Supply',
+    desc: 'Hosting a wedding, conference, or festival? We supply 500ml, 1L bottles, and 20L cans in bulk for any event size.',
+    features: [
+      'Bulk order discounts',
+      'Branded bottle options',
+      'Day-of delivery guaranteed',
+      'Flexible quantity adjustments',
+    ],
+    cta: 'Book for Event',
+  },
+  {
+    id: 'bulk',
+    icon: Truck,
+    accent: '#10B981',
+    title: 'Bulk & Tanker Supply',
+    desc: 'Large-scale RO treated water via tanker for construction sites, townships, factories, and industrial requirements.',
+    features: [
+      'Food-grade tanker trucks',
+      'Scalable volume ordering',
+      'Emergency supply available',
+      'Competitive bulk pricing',
+    ],
+    cta: 'Contact for Bulk',
+  },
+];
 
 export default function Services() {
   return (
     <div className="services-page">
-      <header className="page-header">
+      {/* Banner */}
+      <header className="page-banner" aria-labelledby="services-heading">
         <div className="container">
-          <h1 className="h1 text-white">Our Services</h1>
-          <p className="p text-white opacity-90">Tailored water supply solutions for every need.</p>
+          <p className="badge services__eyebrow">What We Offer</p>
+          <h1 className="h1 services__hero-title" id="services-heading">
+            Tailored Water Solutions<br />
+            for <span className="gradient-text">Every Need.</span>
+          </h1>
+          <p className="lead services__hero-sub">
+            From a single household to a large enterprise — we have a water
+            solution designed exactly for you.
+          </p>
         </div>
       </header>
 
-      <section className="section bg-light">
+      {/* Service Cards */}
+      <section className="section" aria-labelledby="services-heading">
         <div className="container">
-          <div className="grid grid-cols-2 gap-4 services-grid">
-            <div className="service-card">
-              <div className="icon-wrapper"><Home size={40} /></div>
-              <h2 className="h2 mb-2">Residential Delivery</h2>
-              <p className="p mb-4">We deliver 20L cans directly to your doorstep. Schedule regular deliveries so you never run out of pure drinking water.</p>
-              <Link href="/contact" className="btn btn-outline">Schedule Delivery</Link>
-            </div>
-            
-            <div className="service-card">
-              <div className="icon-wrapper"><Building2 size={40} /></div>
-              <h2 className="h2 mb-2">Corporate Supply</h2>
-              <p className="p mb-4">Keep your employees hydrated with our reliable office supply. We provide dispensers and regular maintenance.</p>
-              <Link href="/contact" className="btn btn-outline">Get Corporate Quote</Link>
-            </div>
-            
-            <div className="service-card">
-              <div className="icon-wrapper"><CalendarDays size={40} /></div>
-              <h2 className="h2 mb-2">Event Water Supply</h2>
-              <p className="p mb-4">Hosting a wedding, conference, or party? We supply water cans, 500ml bottles, and 1L bottles in bulk for your guests.</p>
-              <Link href="/contact" className="btn btn-outline">Book for Event</Link>
-            </div>
-            
-            <div className="service-card">
-              <div className="icon-wrapper"><Truck size={40} /></div>
-              <h2 className="h2 mb-2">Bulk Orders & Tankers</h2>
-              <p className="p mb-4">For large-scale requirements, we offer tanker services equipped with RO treated water.</p>
-              <Link href="/contact" className="btn btn-outline">Contact for Bulk</Link>
-            </div>
+          <div className="services__grid">
+            {SERVICES.map(({ id, icon: Icon, accent, title, desc, features, cta }) => (
+              <article key={id} className="service-card" aria-label={title}>
+                <div
+                  className="service-card__icon icon-circle"
+                  style={{ '--card-accent': accent }}
+                >
+                  <Icon size={28} aria-hidden="true" />
+                </div>
+
+                <h2 className="h3 service-card__title">{title}</h2>
+                <p className="body service-card__desc">{desc}</p>
+
+                <ul className="service-card__features" aria-label={`${title} features`}>
+                  {features.map((f) => (
+                    <li key={f} className="service-card__feature">
+                      <CheckCircle2 size={14} aria-hidden="true" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href="/contact"
+                  className="btn btn-outline service-card__cta"
+                  id={`service-cta-${id}`}
+                >
+                  {cta}
+                  <ArrowRight size={15} aria-hidden="true" />
+                </Link>
+              </article>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* CTA Banner */}
+      <section className="services__cta-band bg-panel" aria-labelledby="services-cta-heading">
+        <div className="container services__cta-inner">
+          <div>
+            <h2 className="h2 services__cta-title" id="services-cta-heading">
+              Not sure which plan fits you?
+            </h2>
+            <p className="lead services__cta-sub">
+              Our team will help you find the perfect water solution. Just reach out.
+            </p>
+          </div>
+          <Link href="/contact" className="btn btn-primary btn-lg" id="services-contact-cta">
+            Talk to Us <ArrowRight size={18} aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </div>

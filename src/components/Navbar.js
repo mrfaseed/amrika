@@ -1,33 +1,88 @@
 'use client';
+
 import Link from 'next/link';
-import { useState } from 'react';
-import { Menu, X, Droplets, ArrowRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { Menu, X, Droplets, Phone } from 'lucide-react';
 import './Navbar.css';
 
+const NAV_LINKS = [
+  { href: '/',         label: 'Home' },
+  { href: '/about',    label: 'About Us' },
+  { href: '/products', label: 'Products' },
+  { href: '/services', label: 'Services' },
+];
+
+/* TODO: Replace with your real WhatsApp number */
+const WHATSAPP_URL =
+  'https://wa.me/919876543210?text=Hi%2C%20I%20would%20like%20to%20order%20Amirita%20Water';
+
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname  = usePathname();
+  const [isOpen,   setIsOpen]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  /* Close mobile menu on route change */
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="navbar">
-      <div className="container flex justify-between items-center">
-        <Link href="/" className="logo flex items-center gap-1">
-          <Droplets className="logo-icon" size={24} />
-          <span className="logo-text">Amirita <span className="text-blue">Water</span></span>
+    <nav className={`navbar${scrolled ? ' navbar--scrolled' : ''}`} role="navigation" aria-label="Main navigation">
+      <div className="container navbar__inner">
+
+        {/* Logo */}
+        <Link href="/" className="navbar__logo" aria-label="Amirita Water — home">
+          <Droplets size={28} aria-hidden="true" />
+          <span>Amirita <strong>Water</strong></span>
         </Link>
-        
-        <div className={`nav-links ${isOpen ? 'active' : ''}`}>
-          <Link href="/" onClick={() => setIsOpen(false)} className="active-link">Home</Link>
-          <Link href="/about" onClick={() => setIsOpen(false)}>About Us</Link>
-          <Link href="/products" onClick={() => setIsOpen(false)}>Products</Link>
-          <Link href="/services" onClick={() => setIsOpen(false)}>Services</Link>
-          <Link href="/contact" onClick={() => setIsOpen(false)}>Contact</Link>
-          <Link href="/contact" className="btn btn-primary ml-4 order-btn" onClick={() => setIsOpen(false)}>
-            Order Now <ArrowRight size={16} />
-          </Link>
+
+        {/* Desktop links */}
+        <div className={`navbar__links${isOpen ? ' navbar__links--open' : ''}`} id="nav-menu">
+          {NAV_LINKS.map(({ href, label }) => {
+            const isActive =
+              href === '/' ? pathname === '/' : pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`navbar__link${isActive ? ' navbar__link--active' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {label}
+              </Link>
+            );
+          })}
+
+          {/* CTA */}
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-whatsapp navbar__cta"
+            id="nav-whatsapp-cta"
+          >
+            <Phone size={16} aria-hidden="true" />
+            Order via WhatsApp
+          </a>
         </div>
 
-        <button className="mobile-menu-btn" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle Menu">
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        {/* Mobile toggle */}
+        <button
+          className="navbar__toggle"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isOpen}
+          aria-controls="nav-menu"
+          id="nav-mobile-toggle"
+        >
+          {isOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
     </nav>

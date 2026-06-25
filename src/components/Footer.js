@@ -4,7 +4,7 @@ import './Footer.css';
 
 /* TODO: Replace all placeholder data below with real business info */
 const CONTACT = {
-  phone:    '+91 98765 43210',         /* TODO: real phone */
+  phone:    '+91 9487779711',         /* TODO: real phone */
   email:    'order@amiritawater.com',  /* TODO: real email */
   address:  '123 Water Plant Road, Pure City, State — 600001', /* TODO: real address */
   whatsapp: 'https://wa.me/9487779711?text=Hi%2C%20I%27d%20like%20to%20order%20Amirita%20Water',

@@ -11,7 +11,7 @@ const WHATSAPP_URL = 'https://wa.me/9487779711?text=Hi%2C%20I%27d%20like%20to%20
 const CONTACT_INFO = [
   { icon: Phone,  label: 'Phone',   value: '+91 9487779711',          href: 'tel:+919487779711' },
   { icon: Mail,   label: 'Email',   value: 'order@amiritawater.com',   href: 'mailto:order@amiritawater.com' },
-  { icon: MapPin, label: 'Address', value: '123 Water Plant Road, Pure City', href: null },
+  { icon: MapPin, label: 'Address', value: 'No. 10/1, Panaikulam Village, T. Veppankulam Panchayat, Kariapatti Taluk, Virudhunagar Dist – 626106', href: null },
 ];
 
 const INIT = { name: '', phone: '', quantity: 2, deliveryDate: '' };

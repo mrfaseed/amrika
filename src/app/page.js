@@ -4,9 +4,8 @@ import { Flame, ShieldCheck, Truck, CheckCircle2, MessageCircle } from 'lucide-r
 import TrustSection from '@/components/TrustSection';
 import './Home.css';
 
-/* TODO: Replace with your real WhatsApp number */
 const WHATSAPP_URL =
-  'https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20start%20my%20water%20delivery';
+  'https://wa.me/9487779711?text=Hi%2C%20I%20want%20to%20start%20my%20water%20delivery';
 
 const HOW_STEPS = [
   {
@@ -90,10 +89,10 @@ export default function Home() {
           <div className="hero__visual" aria-hidden="true">
             <div className="hero__img-wrap">
               <Image
-                src="/images/water_delivery_hero.png"
-                alt="Amirita 20L purified water can ready for delivery"
-                width={520}
-                height={580}
+                src="/images/hero_product.png"
+                alt="Amirita premium 20L purified water can — crystal clear and ready for delivery"
+                width={540}
+                height={540}
                 priority
                 className="hero__img animate-float"
                 style={{ objectFit: 'contain' }}

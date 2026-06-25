@@ -5,11 +5,11 @@ import { Phone, Mail, MapPin, MessageCircle, Minus, Plus, ArrowRight, CheckCircl
 import './contact.css';
 
 /* TODO: Replace with your real WhatsApp number */
-const WHATSAPP_URL = 'https://wa.me/919876543210?text=Hi%2C%20I%27d%20like%20to%20place%20a%20water%20order';
+const WHATSAPP_URL = 'https://wa.me/9487779711?text=Hi%2C%20I%27d%20like%20to%20place%20a%20water%20order';
 
 /* TODO: Replace with real contact info */
 const CONTACT_INFO = [
-  { icon: Phone,  label: 'Phone',   value: '+91 98765 43210',          href: 'tel:+919876543210' },
+  { icon: Phone,  label: 'Phone',   value: '+91 9487779711',          href: 'tel:+919487779711' },
   { icon: Mail,   label: 'Email',   value: 'order@amiritawater.com',   href: 'mailto:order@amiritawater.com' },
   { icon: MapPin, label: 'Address', value: '123 Water Plant Road, Pure City', href: null },
 ];

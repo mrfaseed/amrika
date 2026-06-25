@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react';
 import './FloatingWhatsApp.css';
 
-/* TODO: Replace with your real WhatsApp number */
 const WHATSAPP_URL =
-  'https://wa.me/919876543210?text=Hi%2C%20I%27d%20like%20to%20order%20Amirita%20Water';
+  'https://wa.me/9487779711?text=Hi%2C%20I%27d%20like%20to%20order%20Amirita%20Water';
 
 export default function FloatingWhatsApp() {
   const [visible, setVisible] = useState(false);

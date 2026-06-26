@@ -34,8 +34,21 @@ export default function Home() {
         <div className="hero__blob hero__blob--1" aria-hidden="true" />
         <div className="hero__blob hero__blob--2" aria-hidden="true" />
 
+        {/* Full-viewport product image — absolutely positioned, bleeds into bg */}
+        <div className="hero__visual" aria-hidden="true">
+          <div className="hero__img-wrap">
+            <Image
+              src="/images/hero_product_1.png"
+              alt="Amirita premium 20L purified water can — crystal clear and ready for delivery"
+              fill
+              priority
+              className="hero__img"
+            />
+          </div>
+        </div>
+
+        {/* Text content sits above the image */}
         <div className="container hero__inner">
-          {/* Left content */}
           <div className="hero__content">
             <div className="badge hero__badge">
               <Flame size={14} aria-hidden="true" />
@@ -84,23 +97,9 @@ export default function Home() {
               </span>
             </div>
           </div>
-
-          {/* Right visual */}
-          <div className="hero__visual" aria-hidden="true">
-            <div className="hero__img-wrap">
-              <Image
-                src="/images/hero_product.png"
-                alt="Amirita premium 20L purified water can — crystal clear and ready for delivery"
-                width={540}
-                height={540}
-                priority
-                className="hero__img animate-float"
-                style={{ objectFit: 'contain' }}
-              />
-            </div>
-          </div>
         </div>
       </section>
+
 
       {/* ── TRUST SECTION ────────────────────────── */}
       <TrustSection />

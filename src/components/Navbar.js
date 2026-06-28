@@ -7,7 +7,7 @@ import { Menu, X, Droplets, Phone } from 'lucide-react';
 import './Navbar.css';
 
 const NAV_LINKS = [
-  { href: '/',         label: 'Home' },
+  { href: '/',         label: 'Home1' },
   { href: '/about',    label: 'About Us' },
   { href: '/products', label: 'Products' },
   { href: '/services', label: 'Services' },

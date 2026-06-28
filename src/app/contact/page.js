@@ -3,6 +3,7 @@
 import { useState, Suspense, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Phone,
   Mail,
@@ -22,8 +23,8 @@ import './contact.css';
 const WHATSAPP_BASE = 'https://wa.me/9487779711';
 
 const CONTACT_INFO = [
-  { icon: Phone,  label: 'Phone',   value: '+91 9487779711',        href: 'tel:+919487779711' },
-  { icon: Mail,   label: 'Email',   value: 'order@amiritawater.com', href: 'mailto:order@amiritawater.com' },
+  { icon: Phone, label: 'Phone', value: '+91 9487779711', href: 'tel:+919487779711' },
+  { icon: Mail, label: 'Email', value: 'order@amiritawater.com', href: 'mailto:order@amiritawater.com' },
   {
     icon: MapPin,
     label: 'Address',
@@ -47,32 +48,97 @@ const BOTTLE_PRODUCTS = [
     id: '250ml',
     name: '250ml Bottle',
     pricePerBottle: 6,
-    bottlesPerCase: 48,
-    pricePerCase: 288,   // 6 × 48
+    bottlesPerCase: 24,
+    pricePerCase: 144,   // 6 × 48
     image: '/images/water_bottle_500ml.png',
     accent: 'aqua',
     param: '250ml',
   },
 ];
 
+function AnimatedPhoneInput({ value, onChange, error, ariaDescribedBy }) {
+  const handleKeyDown = (e) => {
+    // Only allow numbers, backspace, delete, tab, arrows
+    if (
+      !/^[0-9]$/.test(e.key) &&
+      !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  const handleChange = (e) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 10) val = val.slice(0, 10);
+    onChange(val);
+  };
+
+  const digits = value.split('');
+  const placeholders = Array.from({ length: 10 - digits.length });
+
+  return (
+    <div className={`animated-phone-wrapper ${error ? 'animated-phone-wrapper--error' : ''}`}>
+      <span className="phone-prefix" aria-hidden="true">+91</span>
+
+      <input
+        id="phone"
+        type="tel"
+        name="phone"
+        className="phone-hidden-input"
+        value={value}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        maxLength={10}
+        aria-describedby={ariaDescribedBy}
+        autoComplete="tel"
+        aria-label="Mobile Number"
+      />
+
+      <div className="phone-visual-display" aria-hidden="true">
+        {digits.map((digit, i) => (
+          <div key={i} className="digit-slot">
+            <AnimatePresence mode="popLayout">
+              <motion.span
+                key={digit + i}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                className="digit"
+              >
+                {digit}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+        ))}
+        {placeholders.map((_, i) => (
+          <div key={`p-${i}`} className="digit-slot digit-slot--placeholder">
+            <span className="digit">_</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Inner form (needs useSearchParams → must be in Suspense) ── */
 function OrderForm() {
-  const params       = useSearchParams();
+  const params = useSearchParams();
   const productParam = params.get('product'); // '500ml' | '250ml' | 'custom' | null
 
   const preSelect500 = productParam === '500ml' || productParam === 'custom';
   const preSelect250 = productParam === '250ml' || productParam === 'custom';
 
-  const [selected500,     setSelected500]     = useState(preSelect500);
-  const [selected250,     setSelected250]     = useState(preSelect250);
-  const [cases500,        setCases500]        = useState(1);
-  const [cases250,        setCases250]        = useState(1);
-  const [form,            setForm]            = useState({ name: '', phone: '', deliveryDate: '' });
-  const [isSubmitting,    setIsSubmitting]    = useState(false);
-  const [isSuccess,       setIsSuccess]       = useState(false);
-  const [errors,          setErrors]          = useState({});
+  const [selected500, setSelected500] = useState(preSelect500);
+  const [selected250, setSelected250] = useState(preSelect250);
+  const [cases500, setCases500] = useState(1);
+  const [cases250, setCases250] = useState(1);
+  const [form, setForm] = useState({ name: '', phone: '', deliveryDate: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
-  const [submitError,     setSubmitError]     = useState('');
+  const [submitError, setSubmitError] = useState('');
 
   /* Ref on the form panel top — used to scroll-into-view on success */
   const formTopRef = useRef(null);
@@ -85,20 +151,27 @@ function OrderForm() {
     }
   };
 
+  const handlePhoneChange = (val) => {
+    setForm((p) => ({ ...p, phone: val }));
+    if (errors.phone) {
+      setErrors((p) => ({ ...p, phone: '' }));
+    }
+  };
+
   const nothingSelected = !selected500 && !selected250;
 
   /* Computed totals */
-  const total500   = selected500 ? cases500 * 240 : 0;
-  const total250   = selected250 ? cases250 * 288 : 0;
+  const total500 = selected500 ? cases500 * 240 : 0;
+  const total250 = selected250 ? cases250 * 288 : 0;
   const grandTotal = total500 + total250;
 
   /* WhatsApp message */
   const buildWAText = () => {
     const lines = ["Hi! I'd like to place a water bottle order."];
-    if (form.name)         lines.push(`Name: ${form.name}`);
-    if (form.phone)        lines.push(`Phone: ${form.phone}`);
-    if (selected500)       lines.push(`500ml: ${cases500} case(s) = ${cases500 * 24} bottles`);
-    if (selected250)       lines.push(`250ml: ${cases250} case(s) = ${cases250 * 48} bottles`);
+    if (form.name) lines.push(`Name: ${form.name}`);
+    if (form.phone) lines.push(`Phone: ${form.phone}`);
+    if (selected500) lines.push(`500ml: ${cases500} case(s) = ${cases500 * 24} bottles`);
+    if (selected250) lines.push(`250ml: ${cases250} case(s) = ${cases250 * 48} bottles`);
     if (form.deliveryDate) lines.push(`Delivery Date: ${form.deliveryDate}`);
     return encodeURIComponent(lines.join('\n'));
   };
@@ -109,10 +182,28 @@ function OrderForm() {
 
     /* ── Validate ───────────────────────────────────────────── */
     const errs = {};
-    if (!form.name.trim())  errs.name         = 'Full name is required.';
-    if (!form.phone.trim()) errs.phone        = 'Mobile number is required.';
-    if (!form.deliveryDate) errs.deliveryDate = 'Please choose a delivery date.';
-    if (nothingSelected)    errs.product      = 'Please select at least one product.';
+    if (!form.name.trim()) errs.name = 'Name is required.';
+
+    const phoneVal = form.phone.trim();
+    if (!phoneVal) {
+      errs.phone = 'Mobile number is required.';
+    } else if (phoneVal.length !== 10) {
+      errs.phone = 'Mobile number must be exactly 10 digits.';
+    } else if (!/^[6-9]/.test(phoneVal)) {
+      errs.phone = 'Mobile numbers must start with 6, 7, 8, or 9.';
+    } else if (/^(\d)\1{9}$/.test(phoneVal)) {
+      errs.phone = 'Identical digits are not allowed.';
+    } else {
+      const seqForward = '01234567890123456789';
+      const seqBackward = '98765432109876543210';
+      if (seqForward.includes(phoneVal) || seqBackward.includes(phoneVal)) {
+        errs.phone = 'Sequential numbers are not allowed.';
+      } else if (/^(\d{2})\1{4}$/.test(phoneVal) || /^(\d{5})\1{1}$/.test(phoneVal)) {
+        errs.phone = 'Repeated patterns are not allowed.';
+      }
+    }
+    /* if (!form.deliveryDate) errs.deliveryDate = 'Please choose a delivery date.'; */
+    if (nothingSelected) errs.product = 'Please select at least one product.';
 
     if (Object.keys(errs).length) {
       setErrors(errs);
@@ -127,52 +218,36 @@ function OrderForm() {
     if (selected500) orderLines.push(`500ml Bottles: ${cases500} case(s) × 24 = ${cases500 * 24} bottles (₹${cases500 * 240})`);
     if (selected250) orderLines.push(`250ml Bottles: ${cases250} case(s) × 48 = ${cases250 * 48} bottles (₹${cases250 * 288})`);
 
-    /* ── FormSubmit AJAX request ────────────────────────────── */
+    /* ── Resend API Request ─────────────────────────────────── */
     try {
-      const res = await fetch('https://formsubmit.co/ajax/faseedmohamed6@gmail.com', {
-        method:  'POST',
+      const res = await fetch('/api/contact', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          /* Customer details */
-          Customer_Name:       form.name,
-          Mobile_Number:       form.phone,
-          Delivery_Date:       form.deliveryDate,
-
-          /* Order details */
-          Order_500ml:         selected500
-            ? `${cases500} case(s) = ${cases500 * 24} bottles`
-            : '—',
-          Order_250ml:         selected250
-            ? `${cases250} case(s) = ${cases250 * 48} bottles`
-            : '—',
-          Estimated_Total:     `₹${grandTotal}`,
-
-          /* FormSubmit config fields */
-          _subject:  `🛒 New Order from ${form.name} — Amirita Water`,
-          _template: 'table',
-          _captcha:  'false',
-          _replyto:  `faseedmohamed6@gmail.com`,
+          Customer_Name: form.name,
+          Mobile_Number: form.phone,
+          Delivery_Date: form.deliveryDate,
+          Order_500ml: selected500 ? `${cases500} case(s) = ${cases500 * 24} bottles` : '—',
+          Order_250ml: selected250 ? `${cases250} case(s) = ${cases250 * 48} bottles` : '—',
+          Estimated_Total: `₹${grandTotal}`,
         }),
       });
 
       const data = await res.json();
-      console.log('[FormSubmit response]', data); // visible in browser DevTools
+      console.log('[Resend response]', data); // visible in browser DevTools
 
-      if (data.success === 'true' || data.success === true) {
+      if (data.success) {
         setIsSuccess(true);
         /* Scroll to the success card */
         setTimeout(() => {
           formTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 50);
       } else {
-        /* Show FormSubmit's own message so the reason is clear */
-        const reason = data.message
-          ? `FormSubmit: "${data.message}"`
-          : 'Unknown error from FormSubmit.';
+        const reason = data.message || 'Unknown error';
         setSubmitError(`Order not sent — ${reason}. Use WhatsApp below as a backup.`);
       }
     } catch (err) {
-      console.error('[FormSubmit fetch error]', err);
+      console.error('[API fetch error]', err);
       setSubmitError('Network error — please check your connection or use WhatsApp below.');
     } finally {
       setIsSubmitting(false);
@@ -264,7 +339,7 @@ function OrderForm() {
           <div className="product-selector" role="group" aria-label="Select bottle sizes">
             {BOTTLE_PRODUCTS.map((prod) => {
               const isSelected = prod.id === '500ml' ? selected500 : selected250;
-              const toggle     = prod.id === '500ml'
+              const toggle = prod.id === '500ml'
                 ? () => setSelected500((s) => !s)
                 : () => setSelected250((s) => !s);
 
@@ -445,16 +520,11 @@ function OrderForm() {
             {/* Phone */}
             <div className="form-group">
               <label className="form-label" htmlFor="phone">Mobile Number *</label>
-              <input
-                id="phone"
-                type="tel"
-                name="phone"
-                className={`form-input${errors.phone ? ' form-input--error' : ''}`}
+              <AnimatedPhoneInput
                 value={form.phone}
-                onChange={handleChange}
-                placeholder="+91 99999 99999"
-                aria-describedby={errors.phone ? 'phone-error' : undefined}
-                autoComplete="tel"
+                onChange={handlePhoneChange}
+                error={!!errors.phone}
+                ariaDescribedBy={errors.phone ? 'phone-error' : undefined}
               />
               {errors.phone && (
                 <p className="form-error" id="phone-error" role="alert">{errors.phone}</p>
@@ -464,7 +534,7 @@ function OrderForm() {
             {/* Delivery Date */}
             <div className="form-group">
               <label className="form-label" htmlFor="deliveryDate">
-                Preferred Delivery Date *
+                Expected Delivery Date
               </label>
               <input
                 id="deliveryDate"
@@ -496,30 +566,24 @@ function OrderForm() {
                 <div className="order-summary__item order-summary__item--blue">
                   <span>
                     500ml &times; {cases500} case{cases500 !== 1 ? 's' : ''}{' '}
-                    <em>({cases500 * 24} bottles)</em>
+
                   </span>
-                  <span className="order-summary__price">₹{cases500 * 240}</span>
+                  <span className="order-summary__price"> {cases500 * 24} bottles</span>
                 </div>
               )}
               {selected250 && (
                 <div className="order-summary__item order-summary__item--aqua">
                   <span>
                     250ml &times; {cases250} case{cases250 !== 1 ? 's' : ''}{' '}
-                    <em>({cases250 * 48} bottles)</em>
+
                   </span>
-                  <span className="order-summary__price">₹{cases250 * 288}</span>
+                  <span className="order-summary__price"> {cases250 * 24} bottles</span>
+
                 </div>
               )}
             </div>
 
-            <div className="order-summary__total">
-              <span>Estimated Total</span>
-              <span className="order-summary__total-amount">₹{grandTotal}</span>
-            </div>
 
-            <p className="order-summary__note">
-              * Final price confirmed at delivery. Bulk discounts may apply.
-            </p>
           </div>
         )}
 

@@ -169,6 +169,7 @@
 .hiw__visual { position: relative; }
 
 .hiw__img-wrap {
+  position: relative;
   border-radius: var(--r-xl);
   overflow: hidden;
   box-shadow: var(--shadow-lg);

@@ -239,6 +239,9 @@ button {
   color: var(--success);
   border: 1px solid rgba(16, 185, 129, 0.25);
 }
+.btn-whatsapp svg {
+  transform: translateY(-2px) !important;
+}
 .btn-whatsapp:hover {
   background: var(--success);
   color: var(--bg-base);

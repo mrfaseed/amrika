@@ -1,65 +1,62 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, CheckCircle2, MessageCircle } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import './products.css';
 
 export const metadata = {
   title: 'Products & Pricing',
   description:
-    'Explore Amirita Water\'s range of RO + UV purified water products — 20L cans, 1L bottles, 500ml bottles, and bulk tanker supply.',
+    "Explore Amirita Water's 500ml and 250ml RO + UV purified water bottles — FSSAI certified, pH balanced, delivered fresh.",
 };
 
-const FEATURES = ['RO + UV Purified', 'FSSAI Certified', 'pH Balanced', 'No Added Chemicals'];
+const FEATURES = [
+  'RO + UV Purified',
+  'FSSAI Certified',
+  'pH Balanced',
+  'No Added Chemicals',
+];
 
 const PRODUCTS = [
   {
-    id: 1,
-    name: '20L Water Can',
-    tagline: 'Home & Office favourite',
-    description: 'Dispenser compatible. The most economical choice for daily household and office hydration needs.',
-    image: '/images/water_can_20l.png',
-    imageW: 300,
-    imageH: 360,
-    price: '₹50',
-    unit: 'per can',
-    popular: true,
-  },
-  {
-    id: 2,
-    name: '1L Water Bottle',
-    tagline: 'Perfect for on-the-go',
-    description: 'Ideal for travel, meetings, schools, and restaurants. Slim, sealed, and BPA-free.',
-    image: '/images/water_bottle_1l.png',
-    imageW: 240,
-    imageH: 340,
-    price: '₹20',
-    unit: 'per bottle',
-    popular: false,
-  },
-  {
-    id: 3,
-    name: '500ml Bottle',
-    tagline: 'Quick hydration',
-    description: 'Handy pocket-sized bottle for quick hydration anytime, anywhere. Great for events and gyms.',
+    id: 'bottle-500ml',
+    name: '500ml Water Bottle',
+    tagline: 'Best Seller',
+    description:
+      'Perfect pocket-sized bottle for on-the-go hydration. Sealed, BPA-free, and purified to the highest standard. Ideal for gyms, events, offices, and travel.',
     image: '/images/water_bottle_500ml.png',
     imageW: 220,
     imageH: 320,
     price: '₹10',
     unit: 'per bottle',
-    popular: false,
+    accent: 'blue',
+    popular: true,
+    href: '/contact?product=500ml',
   },
   {
-    id: 4,
-    name: 'Bulk Tanker Supply',
-    tagline: 'Events & large scale',
-    description: 'Large-scale purified water supply for weddings, conferences, construction sites, and more.',
-    image: '/images/water_truck_delivery.png',
-    imageW: 400,
-    imageH: 280,
-    price: 'Get Quote',
-    unit: 'contact us',
+    id: 'bottle-250ml',
+    name: '250ml Water Bottle',
+    tagline: 'Compact & Fresh',
+    description:
+      "Mini bottle with maximum freshness. Great for kids' lunch boxes, cafes, short commutes, and hospitality. Light, sealed, and eco-friendly.",
+    image: '/images/water_bottle_500ml.png',
+    imageW: 160,
+    imageH: 240,
+    price: '₹6',
+    unit: 'per bottle',
+    accent: 'aqua',
     popular: false,
-    isBulk: true,
+    href: '/contact?product=250ml',
+  },
+  {
+    id: 'custom',
+    name: 'Custom Bottle Order',
+    tagline: 'Mix & Match',
+    description:
+      'Need both sizes or a large custom quantity? Build your order with any combination of 500ml and 250ml cases — tailored to your event, business, or home.',
+    accent: 'purple',
+    popular: false,
+    href: '/contact?product=custom',
+    isCustom: true,
   },
 ];
 
@@ -71,11 +68,11 @@ export default function Products() {
         <div className="container">
           <p className="badge products__eyebrow">Products &amp; Pricing</p>
           <h1 className="h1 products__hero-title" id="products-heading">
-            Premium Water, <span className="gradient-text">Fair Prices.</span>
+            Pure Water, <span className="gradient-text">Your Way.</span>
           </h1>
           <p className="lead products__hero-sub">
-            Choose the right product for your home, office, or event.
-            Every drop is RO + UV purified and FSSAI certified.
+            Choose your bottle size or build a fully custom mixed order.
+            Every drop is RO&nbsp;+&nbsp;UV purified and FSSAI certified.
           </p>
         </div>
       </header>
@@ -92,55 +89,76 @@ export default function Products() {
         </div>
       </div>
 
-      {/* Product grid */}
-      <section className="section" aria-labelledby="products-heading">
+      {/* Product grid — 3 cards */}
+      <section className="section" aria-label="Our products">
         <div className="container">
-          <div className="products__grid">
-            {PRODUCTS.map((p) => (
+          <div className="products__grid products__grid--three">
+            {PRODUCTS.map((p, i) => (
               <article
                 key={p.id}
-                className={`product-card${p.popular ? ' product-card--popular' : ''}`}
+                className={[
+                  'product-card',
+                  `product-card--${p.accent}`,
+                  p.popular ? 'product-card--popular' : '',
+                  p.isCustom ? 'product-card--custom' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
                 aria-label={p.name}
+                style={{ '--card-index': i }}
               >
                 {p.popular && (
-                  <div className="product-card__badge" aria-label="Most popular">
-                    <Star size={12} aria-hidden="true" fill="currentColor" />
-                    Most Popular
+                  <div className="product-card__badge" aria-label="Best seller">
+                    🔥 Best Seller
                   </div>
                 )}
 
-                <div className="product-card__image">
-                  <Image
-                    src={p.image}
-                    alt={`Amirita ${p.name}`}
-                    width={p.imageW}
-                    height={p.imageH}
-                    style={{ objectFit: 'contain' }}
-                    className="product-card__img"
-                  />
-                </div>
+                {p.isCustom ? (
+                  <div className="product-card__custom-visual" aria-hidden="true">
+                    <div className="product-card__custom-glow" />
+                    <div className="product-card__custom-icon-wrap">
+                      <span className="product-card__custom-star">✦</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="product-card__image">
+                    <Image
+                      src={p.image}
+                      alt={`Amirita ${p.name}`}
+                      width={p.imageW}
+                      height={p.imageH}
+                      style={{ objectFit: 'contain' }}
+                      className="product-card__img"
+                    />
+                  </div>
+                )}
 
                 <div className="product-card__body">
                   <p className="caption product-card__tagline">{p.tagline}</p>
                   <h2 className="h3 product-card__name">{p.name}</h2>
                   <p className="body product-card__desc">{p.description}</p>
 
-                  <div className="product-card__price">
-                    <span className="product-card__amount">{p.price}</span>
-                    <span className="caption product-card__unit">{p.unit}</span>
-                  </div>
+                  {p.price && (
+                    <div className="product-card__price">
+                      <span className="product-card__amount">{p.price}</span>
+                      <span className="caption product-card__unit">{p.unit}</span>
+                    </div>
+                  )}
 
                   <Link
-                    href="/contact"
-                    className={`btn product-card__cta${p.popular ? ' btn-primary' : ' btn-outline'}`}
+                    href={p.href}
+                    className={[
+                      'btn product-card__cta',
+                      p.popular
+                        ? 'btn-primary'
+                        : p.isCustom
+                        ? 'btn-custom-order'
+                        : 'btn-outline',
+                    ].join(' ')}
                     id={`product-order-${p.id}`}
                   >
-                    {p.isBulk ? (
-                      <>
-                        <MessageCircle size={15} aria-hidden="true" />
-                        Contact for Quote
-                      </>
-                    ) : 'Order Now'}
+                    {p.isCustom ? 'Build Your Order' : 'Order Now'}
+                    <ArrowRight size={15} aria-hidden="true" />
                   </Link>
                 </div>
               </article>

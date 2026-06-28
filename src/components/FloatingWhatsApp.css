@@ -22,7 +22,7 @@
   opacity: 0;
   transform: translateY(16px) scale(0.9);
   transition: opacity 0.4s ease, transform 0.4s ease,
-              box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow 0.3s ease, background 0.3s ease;
   pointer-events: none;
 }
 
@@ -71,5 +71,8 @@
     padding: 0.95rem;
     border-radius: 50%;
   }
-  .wa-fab__label { display: none; }
+
+  .wa-fab__label {
+    display: none;
+  }
 }

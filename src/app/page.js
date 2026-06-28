@@ -38,7 +38,7 @@ export default function Home() {
         <div className="hero__visual" aria-hidden="true">
           <div className="hero__img-wrap">
             <Image
-              src="/images/hero_product_1.png"
+              src="/images/bg_product_3.png"
               alt="Amirita premium 20L purified water can — crystal clear and ready for delivery"
               fill
               priority
@@ -52,7 +52,7 @@ export default function Home() {
           <div className="hero__content">
             <div className="badge hero__badge">
               <Flame size={14} aria-hidden="true" />
-              Premium 20L Water Delivery
+              Every Drop, Pure by Nature
             </div>
 
             <h1 className="h1 hero__title" id="hero-heading">
@@ -61,8 +61,8 @@ export default function Home() {
             </h1>
 
             <p className="lead hero__sub">
-              Experience the highest standard of hydration. Pure RO + UV
-              treated water delivered same-day to your doorstep.
+              Experience the highest standard of hydration. Pure drinking 
+              water delivered fastest way to your doorstep.
             </p>
 
             <div className="hero__actions">
@@ -112,10 +112,10 @@ export default function Home() {
           <div className="hiw__visual">
             <div className="hiw__img-wrap">
               <Image
-                src="/images/water_truck_delivery.png"
+                src="/images/water_load.png"
                 alt="Amirita water delivery truck en route to customers"
-                width={640}
-                height={440}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="hiw__img"
                 style={{ objectFit: 'cover' }}
               />

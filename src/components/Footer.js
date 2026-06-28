@@ -1,21 +1,13 @@
 import Link from 'next/link';
-import { Droplets, Phone, Mail, MapPin, CheckCircle2, MessageCircle } from 'lucide-react';
+import { Droplets, Phone, Mail } from 'lucide-react';
 import './Footer.css';
 
-/* TODO: Replace all placeholder data below with real business info */
-const CONTACT = {
-  phone:    '+91 9487779711',         /* TODO: real phone */
-  email:    'Ulkptrmails@gmail.com',  /* TODO: real email */
-  address:  'No. 10/1, Panaikulam Village, T. Veppankulam Panchayat, Kariapatti Taluk, Virudhunagar District – 626106',
-  whatsapp: 'https://wa.me/9487779711?text=Hi%2C%20I%27d%20like%20to%20order%20Amirita%20Water',
-};
-
-const SERVICE_AREAS = [
-  'Downtown Core',
-  'Suburban Districts',
-  'Corporate Parks',
-  'IT Corridors',
-  'Same-day Delivery Zones',
+const NAV_LINKS = [
+  { label: 'Home',     href: '/' },
+  { label: 'About',    href: '/about' },
+  { label: 'Products', href: '/products' },
+  { label: 'Services', href: '/services' },
+  { label: 'Order',    href: '/contact' },
 ];
 
 export default function Footer() {
@@ -23,89 +15,72 @@ export default function Footer() {
 
   return (
     <footer className="footer" role="contentinfo">
-      {/* Top gradient accent */}
-      <div className="footer__accent" aria-hidden="true" />
 
-      <div className="container">
-        <div className="footer__grid">
+      {/* ── Aurora ───────────────────────────── */}
+      <div className="footer__aurora" aria-hidden="true">
+        <div className="footer__orb footer__orb--1" />
+        <div className="footer__orb footer__orb--2" />
+      </div>
 
-          {/* Brand col */}
-          <div className="footer__col footer__col--brand">
-            <Link href="/" className="footer__logo" aria-label="Amirita Water home">
-              <Droplets size={30} aria-hidden="true" />
-              <span>Amirita <strong>Water</strong></span>
-            </Link>
-            <p className="body footer__tagline">
-              Premium RO + UV purified drinking water delivered directly to your
-              home and office. Quality and purity you can trust every day.
-            </p>
-            <div className="footer__cert">
-              <CheckCircle2 size={15} aria-hidden="true" />
-              FSSAI Certified Facility
+      {/* ── Animated shimmer border ──────────── */}
+      <div className="footer__shimmer-line" aria-hidden="true" />
+
+      <div className="footer__inner">
+
+        {/* ── Top strip: logo · nav · contacts ── */}
+        <div className="footer__strip">
+
+          <Link href="/" className="footer__logo" aria-label="Amirita Water — home">
+            <div className="footer__logo-orb" aria-hidden="true">
+              <Droplets size={18} />
             </div>
-          </div>
+            <span>Amirita <strong>Water</strong></span>
+          </Link>
 
-          {/* Quick Links */}
-          <div className="footer__col">
-            <h3 className="footer__heading">Quick Links</h3>
-            <ul className="footer__list">
-              <li><Link href="/">Home</Link></li>
-              <li><Link href="/about">About Us</Link></li>
-              <li><Link href="/products">Products &amp; Pricing</Link></li>
-              <li><Link href="/services">Services</Link></li>
-              <li><Link href="/contact">Order Now</Link></li>
-            </ul>
-          </div>
+          <nav className="footer__nav" aria-label="Footer navigation">
+            {NAV_LINKS.map(({ label, href }, i) => (
+              <span key={href} className="footer__nav-item">
+                {i > 0 && <span className="footer__dot" aria-hidden="true">·</span>}
+                <Link href={href} className="footer__nav-link">{label}</Link>
+              </span>
+            ))}
+          </nav>
 
-          {/* Service Areas */}
-          <div className="footer__col">
-            <h3 className="footer__heading">Service Areas</h3>
-            <ul className="footer__list">
-              {SERVICE_AREAS.map((area) => (
-                <li key={area}>{area}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div className="footer__col">
-            <h3 className="footer__heading">Contact Us</h3>
-            <ul className="footer__contact">
-              <li>
-                <Phone size={16} aria-hidden="true" />
-                <a href={`tel:${CONTACT.phone}`}>{CONTACT.phone}</a>
-              </li>
-              <li>
-                <Mail size={16} aria-hidden="true" />
-                <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-              </li>
-              <li>
-                <MapPin size={16} aria-hidden="true" />
-                <span>{CONTACT.address}</span>
-              </li>
-            </ul>
-
-            <a
-              href={CONTACT.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp btn-sm footer__wa-btn"
-              id="footer-whatsapp-cta"
-            >
-              <MessageCircle size={15} aria-hidden="true" />
-              Chat on WhatsApp
+          <div className="footer__contacts">
+            <a href="tel:+919487779711" className="footer__icon-btn"
+               aria-label="Call us" title="+91 9487779711">
+              <Phone size={15} />
+            </a>
+            <a href="mailto:order@amiritawater.com" className="footer__icon-btn"
+               aria-label="Email us" title="order@amiritawater.com">
+              <Mail size={15} />
             </a>
           </div>
+
         </div>
 
-        {/* Bottom bar */}
+        {/* ── GIANT WORDMARK ───────────────────── */}
+        <div className="footer__wordmark-wrap" aria-hidden="true">
+          <span className="footer__wordmark">AmiritA</span>
+        </div>
+
+        {/* ── Bottom bar (sits below the wordmark) */}
         <div className="footer__bottom">
-          <p>&copy; {year} Amirita Water Plant. All rights reserved.</p>
+          <span className="footer__copy">
+            &copy; {year} Amirita Water Plant
+          </span>
+          <span className="footer__badges">
+            <span className="footer__badge">FSSAI</span>
+            <span className="footer__badge footer__badge--aqua">RO+UV</span>
+            <span className="footer__badge footer__badge--green">BPA-Free</span>
+          </span>
           <div className="footer__legal">
-            <Link href="/privacy">Privacy Policy</Link>
-            <Link href="/terms">Terms of Service</Link>
+            <Link href="/privacy" className="footer__legal-link">Privacy</Link>
+            <span aria-hidden="true">·</span>
+            <Link href="/terms" className="footer__legal-link">Terms</Link>
           </div>
         </div>
+
       </div>
     </footer>
   );

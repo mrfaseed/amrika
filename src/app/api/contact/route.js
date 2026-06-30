@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../lib/firebase';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
@@ -13,6 +14,22 @@ export async function POST(request) {
       Order_250ml,
       Estimated_Total,
     } = body;
+
+    // Save data to Firestore
+    try {
+      await addDoc(collection(db, 'orders'), {
+        Customer_Name,
+        Mobile_Number,
+        Delivery_Date,
+        Order_500ml,
+        Order_250ml,
+        Estimated_Total,
+        createdAt: serverTimestamp(),
+      });
+    } catch (firestoreError) {
+      console.error('Error adding document to Firestore: ', firestoreError);
+      // We log the error but still proceed to send the email
+    }
 
     // Format the email using a highly professional HTML design
     const emailHtml = `
@@ -88,6 +105,12 @@ export async function POST(request) {
 
       </div>
     `;
+
+    if (!process.env.RESEND_API_KEY) {
+      console.error('RESEND_API_KEY is not defined');
+      return Response.json({ success: false, message: 'Server configuration error' }, { status: 500 });
+    }
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const { data, error } = await resend.emails.send({
       from: 'Orders <support@hybixgroups.com>', // Use your verified domain in production if you have one
